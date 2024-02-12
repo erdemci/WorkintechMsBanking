@@ -8,9 +8,9 @@ namespace MsBanking.Core.Apis
     {
         public static IEndpointRouteBuilder MapCustomerApi(this IEndpointRouteBuilder app)
         {
-            app.MapGet("/customers", GetAllCustomers);
-            app.MapGet("/customers/{id}", GetCustomer);
-            app.MapPost("/customers", CreateCustomer);
+            app.MapGet("/customer", GetAllCustomers);
+            app.MapGet("/customer/{id}", GetCustomer);
+            app.MapPost("/customer", CreateCustomer);
             return app;
         }
 
