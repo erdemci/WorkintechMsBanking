@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Options;
+﻿using AutoMapper;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using MsBanking.Common.Dto;
 using MsBanking.Common.Entity;
 using MsBanking.Core.Domain;
 
@@ -8,31 +10,64 @@ namespace MsBanking.Core.Services
     public class CustomerService : ICustomerService
     {
         private readonly IMongoCollection<Customer> customerCollection;
+        private readonly IMapper mapper;
 
-        public CustomerService(IOptions<DatabaseOption> options)
+        public CustomerService(IOptions<DatabaseOption> options,IMapper _mapper)
         {
+            mapper = _mapper;
             var dbOptions = options.Value;
-            var client = new MongoClient(dbOptions.ConnectionString);
-            var database = client.GetDatabase(dbOptions.DatabaseName);
-            customerCollection = database.GetCollection<Customer>(dbOptions.CustomerCollectionName);
+            var client = new MongoClient(dbOptions.ConnectionString);//bağlantı
+            var database = client.GetDatabase(dbOptions.DatabaseName);//veritabanı
+            customerCollection = database.GetCollection<Customer>(dbOptions.CustomerCollectionName);//tablo
         }
 
-        public async Task<Customer> GetCustomer(int id)
+        public async Task<CustomerResponseDto> GetCustomer(int id)
         {
             var customerEntity = await customerCollection.FindAsync(c => c.Id == id);
-            return customerEntity.FirstOrDefault();
+            var entity = customerEntity.FirstOrDefault();
+            var mapped = mapper.Map<CustomerResponseDto>(entity);
+            return mapped;
         }
 
-        public async Task<List<Customer>> GetCustomers()
+        public async Task<List<CustomerResponseDto>> GetCustomers()
         {
             var customerEntities = await customerCollection.FindAsync(c => true);
-            return customerEntities.ToList();
+            var customerList = customerEntities.ToList();
+            var mapped = mapper.Map<List<CustomerResponseDto>>(customerList);
+            return mapped;
         }
 
-        public async Task<Customer> CreateCustomer(Customer customer)
+        public async Task<CustomerResponseDto> CreateCustomer(CustomerDto customer)
         {
-            await customerCollection.InsertOneAsync(customer);
-            return customer;
+            var customerEntity = mapper.Map<Customer>(customer);
+
+            customerEntity.CreatedDate = DateTime.Now;
+            customerEntity.UpdatedDate = DateTime.Now;
+            customerEntity.IsActive = true;
+            await customerCollection.InsertOneAsync(customerEntity);
+
+            var customerResponse = mapper.Map<CustomerResponseDto>(customerEntity);
+                 
+            return customerResponse;
+        }
+        public async Task<CustomerResponseDto> UpdateCustomer(int id,CustomerDto customer)
+        {
+            var customerEntity = mapper.Map<Customer>(customer);
+
+            customerEntity.UpdatedDate = DateTime.Now;
+            await customerCollection.ReplaceOneAsync(c => c.Id == id, customerEntity);
+
+            var customerResponseDto = mapper.Map<CustomerResponseDto>(customerEntity);
+            return customerResponseDto;
+        }
+
+        public async Task<bool>  DeleteCustomer(int id)
+        {
+            var customerEntity = await customerCollection.FindAsync(c => c.Id == id);
+            var entity = customerEntity.FirstOrDefault();
+            entity.IsActive = false;
+            var result =  await customerCollection.ReplaceOneAsync(c => c.Id == id, entity);
+            return result.ModifiedCount>0;
         }
     }
 }

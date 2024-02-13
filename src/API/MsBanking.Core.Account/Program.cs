@@ -1,10 +1,5 @@
 
-using MsBanking.Common.Dto;
-using MsBanking.Core.Apis;
-using MsBanking.Core.Domain;
-using MsBanking.Core.Services;
-
-namespace MsBanking.Core
+namespace MsBanking.Core.Account
 {
     public class Program
     {
@@ -19,13 +14,6 @@ namespace MsBanking.Core
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.Configure<DatabaseOption>(builder.Configuration.GetSection("DatabaseOption"));
-            builder.Services.AddScoped<ICustomerService, CustomerService>();
-
-            
-            //automapper
-            builder.Services.AddAutoMapper(typeof(CustomerDtoProfile));
-
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -35,15 +23,9 @@ namespace MsBanking.Core
                 app.UseSwaggerUI();
             }
 
-            app.MapGroup("/api/v1/")
-                .WithTags("Core Banking Api v1")
-                .MapCustomerApi();
-
-
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-          
             app.Run();
         }
     }
