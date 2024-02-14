@@ -27,6 +27,11 @@ namespace MsBanking.Core.Branch
             //automapper
             builder.Services.AddAutoMapper(typeof(BranchProfile));
 
+            builder.Services.AddStackExchangeRedisCache(opt =>
+            {
+                opt.Configuration = builder.Configuration.GetConnectionString("Redis");
+            });
+
 
             var app = builder.Build();
 

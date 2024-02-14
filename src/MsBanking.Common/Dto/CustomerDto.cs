@@ -17,7 +17,7 @@ namespace MsBanking.Common.Dto
 
     public class CustomerResponseDto:CustomerDto
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
     }
     public class CustomerDtoProfile : Profile
     {

@@ -1,4 +1,10 @@
 
+using Microsoft.EntityFrameworkCore;
+using MsBanking.Common.Dto;
+using MsBanking.Core.Account.Apis;
+using MsBanking.Core.Account.Domain;
+using MsBanking.Core.Account.Services;
+
 namespace MsBanking.Core.Account
 {
     public class Program
@@ -14,6 +20,13 @@ namespace MsBanking.Core.Account
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddScoped<IAccountService, AccountService>();
+
+            string connString = builder.Configuration.GetConnectionString("Mysql");
+            builder.Services.AddDbContext<AccountDbContext>(opt => opt.UseMySql(connString, ServerVersion.AutoDetect(connString)));
+
+            builder.Services.AddAutoMapper(typeof(AccountDtoProfile));
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -23,9 +36,16 @@ namespace MsBanking.Core.Account
                 app.UseSwaggerUI();
             }
 
+            app.MapGroup("/api/v1/")
+             .WithTags("Account Api v1")
+             .MapAccountApi();
+
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
+
+
+            DataSeeder.Seed(app);
             app.Run();
         }
     }

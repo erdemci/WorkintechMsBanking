@@ -4,7 +4,7 @@
     {
         Istanbul = 34,
         Izmir = 35,
-        Ankara = 06
+        Ankara = 6
     }
 
     public enum CountryEnum

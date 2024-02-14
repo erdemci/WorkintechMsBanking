@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using MsBanking.Common.Dto;
 using MsBanking.Core.Branch.Domain;
+using System.Text.Json;
 
 namespace MsBanking.Core.Branch.Services
 {
@@ -9,29 +11,66 @@ namespace MsBanking.Core.Branch.Services
     {
         private readonly BranchDbContext db;
         private readonly IMapper mapper;
+        private readonly IDistributedCache cache;
+        private const string cacheKey = "WorkintechMSBanking_Branches";
 
-        public BranchService(BranchDbContext _db, IMapper _mapper)
+        public BranchService(BranchDbContext _db, IMapper _mapper,IDistributedCache _cache)
         {
             db = _db;
             mapper = _mapper;
+            cache = _cache;
         }
 
-        public async Task<List<BranchResponseDto>> GetBranchesAsync()
+        private async Task<List<BranchResponseDto>> SetCacheBranchList()
         {
             var branches = await db.Branches.ToListAsync();
 
-            var mapped = mapper.Map<List<BranchResponseDto>>(branches);
+            List<BranchResponseDto> mapped = mapper.Map<List<BranchResponseDto>>(branches);
+
+            if (mapped.Count > 0)
+            {
+                string branchSerialized = JsonSerializer.Serialize(mapped);
+                var options = new DistributedCacheEntryOptions()
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(60)
+                };
+                await cache.SetStringAsync(cacheKey, branchSerialized, options);
+            }
 
             return mapped;
+        }
+
+
+        public async Task<List<BranchResponseDto>> GetBranchesAsync()
+        {
+            var fromCache = await cache.GetStringAsync(cacheKey);
+
+            if (!string.IsNullOrEmpty(fromCache))
+            {
+                List<BranchResponseDto> result = JsonSerializer.Deserialize<List<BranchResponseDto>>(fromCache);
+                return result;
+            }
+
+            List<BranchResponseDto> response = await SetCacheBranchList();
+
+            return response;
         }
 
         public async Task<BranchResponseDto> GetBranchByIdAsync(int id)
         {
-            var branch = await db.Branches.FirstOrDefaultAsync(x => x.Id == id);
+            var fromCache = await cache.GetStringAsync(cacheKey);
+            if (!string.IsNullOrEmpty(fromCache))
+            {
+                List<BranchResponseDto> response = JsonSerializer.Deserialize<List<BranchResponseDto>>(fromCache);
+                var branchFromCache = response.FirstOrDefault(x => x.Id == id);
+                return branchFromCache;
+            }
+            
+            var result = await SetCacheBranchList();
 
-            var mapped = mapper.Map<BranchResponseDto>(branch);
+            var branch = result.FirstOrDefault(x => x.Id == id);
 
-            return mapped;
+            return branch;
         }
 
         public async Task<BranchResponseDto> CreateBranchAsync(BranchDto branchDto)
@@ -42,6 +81,8 @@ namespace MsBanking.Core.Branch.Services
             await db.SaveChangesAsync();
 
             var mapped = mapper.Map<BranchResponseDto>(branch);
+
+            cache.Remove(cacheKey);
 
             return mapped;
         }
@@ -61,6 +102,7 @@ namespace MsBanking.Core.Branch.Services
             await db.SaveChangesAsync();
 
             var mapped = mapper.Map<BranchResponseDto>(branch);
+            cache.Remove(cacheKey);
 
             return mapped;
         }
@@ -76,6 +118,7 @@ namespace MsBanking.Core.Branch.Services
 
             db.Branches.Remove(branch);
             await db.SaveChangesAsync();
+            cache.Remove(cacheKey);
 
             return true;
         }
