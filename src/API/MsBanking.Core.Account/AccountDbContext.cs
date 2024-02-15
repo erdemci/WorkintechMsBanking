@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MsBanking.Core.Account.Domain.Entity;
 
 namespace MsBanking.Core.Account
 {
@@ -9,6 +10,7 @@ namespace MsBanking.Core.Account
         }
 
         public DbSet<MsBanking.Common.Entity.Account> Accounts { get; set; }
+        public DbSet<MsBanking.Core.Account.Domain.Entity.AccountTransactions> AccountTransactions { get; set; }
 
        
 
@@ -16,6 +18,8 @@ namespace MsBanking.Core.Account
         {
             modelBuilder.Entity<MsBanking.Common.Entity.Account>().ToTable("Account");
             modelBuilder.Entity<MsBanking.Common.Entity.Account>().HasQueryFilter(x => x.IsActive);
+
+            modelBuilder.Entity<AccountTransactions>().ToTable("AccountTransaction");    
         }
     }
 }

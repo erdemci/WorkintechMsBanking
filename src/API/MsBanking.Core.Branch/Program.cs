@@ -4,6 +4,7 @@ using MsBanking.Common.Dto;
 using MsBanking.Core.Branch.Apis;
 using MsBanking.Core.Branch.Domain;
 using MsBanking.Core.Branch.Services;
+using Serilog;
 
 namespace MsBanking.Core.Branch
 {
@@ -34,6 +35,13 @@ namespace MsBanking.Core.Branch
 
 
             var app = builder.Build();
+
+            //Serilog configuration
+            var logger = new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+            Log.Logger = logger;
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

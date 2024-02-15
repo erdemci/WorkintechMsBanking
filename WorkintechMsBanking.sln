@@ -15,11 +15,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MsBanking.Core", "src\API\M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MsBanking.Common", "src\MsBanking.Common\MsBanking.Common.csproj", "{B7DC4E8D-4C9D-4E27-8F6E-EED298E2D6C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsBanking.Gateway", "src\Gateway\MsBanking.Gateway\MsBanking.Gateway.csproj", "{90B866B7-61BA-4F4E-A565-9D6943236C3F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MsBanking.Gateway", "src\Gateway\MsBanking.Gateway\MsBanking.Gateway.csproj", "{90B866B7-61BA-4F4E-A565-9D6943236C3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsBanking.Core.Branch", "src\API\MsBanking.Core.Branch\MsBanking.Core.Branch.csproj", "{5DAE6D19-74F0-4C16-BB7F-08A3AA97DD3D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MsBanking.Core.Branch", "src\API\MsBanking.Core.Branch\MsBanking.Core.Branch.csproj", "{5DAE6D19-74F0-4C16-BB7F-08A3AA97DD3D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsBanking.Core.Account", "src\API\MsBanking.Core.Account\MsBanking.Core.Account.csproj", "{A2AE800C-39B8-40B8-8601-9961C653DB12}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MsBanking.Core.Account", "src\API\MsBanking.Core.Account\MsBanking.Core.Account.csproj", "{A2AE800C-39B8-40B8-8601-9961C653DB12}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsBanking.Card", "src\API\MsBanking.CreditCard\MsBanking.Card.csproj", "{B8930C2F-C797-413B-A2FE-50AAFEF7688F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,10 @@ Global
 		{A2AE800C-39B8-40B8-8601-9961C653DB12}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2AE800C-39B8-40B8-8601-9961C653DB12}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2AE800C-39B8-40B8-8601-9961C653DB12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8930C2F-C797-413B-A2FE-50AAFEF7688F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8930C2F-C797-413B-A2FE-50AAFEF7688F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8930C2F-C797-413B-A2FE-50AAFEF7688F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8930C2F-C797-413B-A2FE-50AAFEF7688F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,6 +65,7 @@ Global
 		{90B866B7-61BA-4F4E-A565-9D6943236C3F} = {25E94483-5F08-4F89-8ABD-0CAC59A0BA38}
 		{5DAE6D19-74F0-4C16-BB7F-08A3AA97DD3D} = {9B3BED07-262D-4255-B4B9-CA1684CFCDC0}
 		{A2AE800C-39B8-40B8-8601-9961C653DB12} = {9B3BED07-262D-4255-B4B9-CA1684CFCDC0}
+		{B8930C2F-C797-413B-A2FE-50AAFEF7688F} = {9B3BED07-262D-4255-B4B9-CA1684CFCDC0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EF7FC894-092A-4812-B4A9-F1A8C1F305FD}

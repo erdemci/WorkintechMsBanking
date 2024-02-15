@@ -1,0 +1,21 @@
+﻿namespace MsBanking.Card.Domain
+{
+    public enum CardStatusEnum
+    {
+        Open = 1,
+        Closed = 2
+    }
+
+    public enum CardVendorTypeEnum
+    {
+        Visa = 1,
+        MasterCard = 2,
+        Troy = 3,
+        AmericanExpress = 4
+    }
+    public enum CardTypeEnum
+    {
+        CreditCard =1,
+        DebitCard=2
+    }
+}

@@ -3,6 +3,7 @@ using MsBanking.Common.Dto;
 using MsBanking.Core.Apis;
 using MsBanking.Core.Domain;
 using MsBanking.Core.Services;
+using Serilog;
 
 namespace MsBanking.Core
 {
@@ -27,6 +28,15 @@ namespace MsBanking.Core
             builder.Services.AddAutoMapper(typeof(CustomerDtoProfile));
 
             var app = builder.Build();
+
+            //DEBUG-->INFORMATION-->WARNING-->ERROR-->FATAL
+            //Serilog configuration
+            var logger = new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .WriteTo.File("logs/log-.txt",rollingInterval:RollingInterval.Day)
+                .CreateLogger();
+            Log.Logger = logger;
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

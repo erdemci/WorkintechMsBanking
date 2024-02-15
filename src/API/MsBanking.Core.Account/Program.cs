@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using MsBanking.Common.Dto;
 using MsBanking.Core.Account.Apis;
 using MsBanking.Core.Account.Domain;
+using MsBanking.Core.Account.Domain.Dto;
 using MsBanking.Core.Account.Services;
+using Serilog;
 
 namespace MsBanking.Core.Account
 {
@@ -21,13 +23,22 @@ namespace MsBanking.Core.Account
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddScoped<IAccountTransactionService, AccountTransactionService>();
 
             string connString = builder.Configuration.GetConnectionString("Mysql");
             builder.Services.AddDbContext<AccountDbContext>(opt => opt.UseMySql(connString, ServerVersion.AutoDetect(connString)));
 
             builder.Services.AddAutoMapper(typeof(AccountDtoProfile));
+            builder.Services.AddAutoMapper(typeof(AccountResponseRequestProfile));
 
             var app = builder.Build();
+
+            //Serilog configuration
+            var logger = new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+            Log.Logger = logger;
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
