@@ -1,9 +1,13 @@
 ﻿using AutoMapper;
+using MassTransit;
+using MassTransit.Transports;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using MsBanking.Common.Dto;
 using MsBanking.Common.Entity;
 using MsBanking.Core.Domain;
+using Serilog;
+using System.Text.Json;
 
 namespace MsBanking.Core.Services
 {
@@ -11,10 +15,12 @@ namespace MsBanking.Core.Services
     {
         private readonly IMongoCollection<Customer> customerCollection;
         private readonly IMapper mapper;
+        private readonly IPublishEndpoint publishEndpoint;
 
-        public CustomerService(IOptions<DatabaseOption> options,IMapper _mapper)
+        public CustomerService(IOptions<DatabaseOption> options,IMapper _mapper, IPublishEndpoint _publishEndpoint)
         {
             mapper = _mapper;
+            publishEndpoint = _publishEndpoint;
             var dbOptions = options.Value;
             var client = new MongoClient(dbOptions.ConnectionString);//bağlantı
             var database = client.GetDatabase(dbOptions.DatabaseName);//veritabanı
@@ -47,7 +53,20 @@ namespace MsBanking.Core.Services
             await customerCollection.InsertOneAsync(customerEntity);
 
             var customerResponse = mapper.Map<CustomerResponseDto>(customerEntity);
-                 
+                
+            //1.Yol --> tek yönlü ve hata durumunda diğer requestleri etkiler. Senkron çağrım.
+            //httpClient.PostAsync("http://localhost:5004/api/Notification",new StringContent(JsonConvert.SerializeObject(customerResponse), Encoding.UTF8, "application/json"));
+
+            //2.Yol Asenkron çağrım. 
+            //HesapOluştur Komutunu tetiklenmesi yeterli.
+            //branchCode parametresi gönderiliyor.
+
+            //2.Yol Asenkron yol çağrımı --rabbitmq'ya mesaj bırakıyoruz, masstransit sayesinde
+
+            await publishEndpoint.Publish<CustomerResponseDto>(customerResponse);//CreateAccountCOMMAND
+            var messageStr = JsonSerializer.Serialize(customerResponse);
+            Log.Logger.Information("Customer Created and Account Created Command Sent to RabbitMQ, message:{messageStr}",messageStr);
+
             return customerResponse;
         }
         public async Task<CustomerResponseDto> UpdateCustomer(string id,CustomerDto customer)

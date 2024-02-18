@@ -18,4 +18,10 @@
         CreditCard =1,
         DebitCard=2
     }
+
+    public enum CardTransactionTypeEnum
+    {
+        Deposit = 1,
+        Withdraw = 2,
+    }
 }

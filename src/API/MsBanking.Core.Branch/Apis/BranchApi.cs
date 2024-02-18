@@ -10,6 +10,7 @@ namespace MsBanking.Core.Branch.Apis
         {
             app.MapGet("/branch", GetAllBranches);
             app.MapGet("/branch/{id}", GetBranch);
+            app.MapGet("/branch/getbycityid/{cityId}", GetBranchByCityId);
             app.MapPost("/branch", CreateBranch);
             app.MapPut("/branch/{id}", UpdateBranch);
             app.MapDelete("/branch/{id}", DeleteBranch);
@@ -26,6 +27,13 @@ namespace MsBanking.Core.Branch.Apis
         private static async Task<Results<Ok<BranchResponseDto>, NotFound>> GetBranch(IBranchService service, int id)
         {
             var branch = await service.GetBranchByIdAsync(id);
+            if (branch == null)
+                return TypedResults.NotFound();
+            return TypedResults.Ok(branch);
+        }
+        private static async Task<Results<Ok<BranchResponseDto>, NotFound>> GetBranchByCityId(IBranchService service, int cityId)
+        {
+            var branch = await service.GetBranchByCityIdAsync(cityId);
             if (branch == null)
                 return TypedResults.NotFound();
             return TypedResults.Ok(branch);

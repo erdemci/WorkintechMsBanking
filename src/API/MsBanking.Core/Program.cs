@@ -1,4 +1,5 @@
 
+using MassTransit;
 using MsBanking.Common.Dto;
 using MsBanking.Core.Apis;
 using MsBanking.Core.Domain;
@@ -22,6 +23,20 @@ namespace MsBanking.Core
 
             builder.Services.Configure<DatabaseOption>(builder.Configuration.GetSection("DatabaseOption"));
             builder.Services.AddScoped<ICustomerService, CustomerService>();
+
+            //masstransit configure
+            builder.Services.AddMassTransit(busConfig =>
+            {
+                busConfig.UsingRabbitMq((context, config) =>
+                {
+                    config.Host(new Uri(builder.Configuration["RabbitMq:HostName"]!), h =>
+                    {
+                        h.Username(builder.Configuration["RabbitMq:UserName"]);
+                        h.Password(builder.Configuration["RabbitMq:Password"]);
+                    });
+                    config.ConfigureEndpoints(context);
+                });
+            });
 
             
             //automapper

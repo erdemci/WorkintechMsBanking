@@ -6,4 +6,10 @@
          Withdraw = 2,
          Transfer = 3
     }
+
+    public enum AccountTypeEnum
+    {
+        Retail = 1,
+        Corporate = 2
+    }
 }

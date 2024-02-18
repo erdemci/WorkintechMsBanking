@@ -21,7 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MsBanking.Core.Branch", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MsBanking.Core.Account", "src\API\MsBanking.Core.Account\MsBanking.Core.Account.csproj", "{A2AE800C-39B8-40B8-8601-9961C653DB12}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsBanking.Card", "src\API\MsBanking.CreditCard\MsBanking.Card.csproj", "{B8930C2F-C797-413B-A2FE-50AAFEF7688F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MsBanking.Card", "src\API\MsBanking.CreditCard\MsBanking.Card.csproj", "{B8930C2F-C797-413B-A2FE-50AAFEF7688F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsBanking.Core.Branch.Test", "test\MsBanking.Core.Branch.Test\MsBanking.Core.Branch.Test.csproj", "{A9C8CE24-DFA9-4CF6-8B35-F4FDFF8FC2CC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +55,10 @@ Global
 		{B8930C2F-C797-413B-A2FE-50AAFEF7688F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8930C2F-C797-413B-A2FE-50AAFEF7688F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B8930C2F-C797-413B-A2FE-50AAFEF7688F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9C8CE24-DFA9-4CF6-8B35-F4FDFF8FC2CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9C8CE24-DFA9-4CF6-8B35-F4FDFF8FC2CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9C8CE24-DFA9-4CF6-8B35-F4FDFF8FC2CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9C8CE24-DFA9-4CF6-8B35-F4FDFF8FC2CC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,6 +72,7 @@ Global
 		{5DAE6D19-74F0-4C16-BB7F-08A3AA97DD3D} = {9B3BED07-262D-4255-B4B9-CA1684CFCDC0}
 		{A2AE800C-39B8-40B8-8601-9961C653DB12} = {9B3BED07-262D-4255-B4B9-CA1684CFCDC0}
 		{B8930C2F-C797-413B-A2FE-50AAFEF7688F} = {9B3BED07-262D-4255-B4B9-CA1684CFCDC0}
+		{A9C8CE24-DFA9-4CF6-8B35-F4FDFF8FC2CC} = {80F9BF4F-E4C1-4BB4-B8D6-6C378102171D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EF7FC894-092A-4812-B4A9-F1A8C1F305FD}

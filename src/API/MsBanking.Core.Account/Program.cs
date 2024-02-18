@@ -1,7 +1,10 @@
 
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using MsBanking.Common.Dto;
+using MsBanking.Common.Helper;
 using MsBanking.Core.Account.Apis;
+using MsBanking.Core.Account.Consumers;
 using MsBanking.Core.Account.Domain;
 using MsBanking.Core.Account.Domain.Dto;
 using MsBanking.Core.Account.Services;
@@ -24,12 +27,28 @@ namespace MsBanking.Core.Account
 
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<IAccountTransactionService, AccountTransactionService>();
+            builder.Services.AddScoped<MsBanking.Common.Helper.IHttpClientHandler, MsBanking.Common.Helper.HttpClientHandler>();
 
             string connString = builder.Configuration.GetConnectionString("Mysql");
             builder.Services.AddDbContext<AccountDbContext>(opt => opt.UseMySql(connString, ServerVersion.AutoDetect(connString)));
 
             builder.Services.AddAutoMapper(typeof(AccountDtoProfile));
             builder.Services.AddAutoMapper(typeof(AccountResponseRequestProfile));
+
+            //masstransit configure
+            builder.Services.AddMassTransit(busConfig =>
+            {
+                busConfig.AddConsumer<AccountConsumer>();
+                busConfig.UsingRabbitMq((context, config) =>
+                {
+                    config.Host(new Uri(builder.Configuration["RabbitMq:HostName"]!), h =>
+                    {
+                        h.Username(builder.Configuration["RabbitMq:UserName"]);
+                        h.Password(builder.Configuration["RabbitMq:Password"]);
+                    });
+                    config.ConfigureEndpoints(context);
+                });
+            });
 
             var app = builder.Build();
 

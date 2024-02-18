@@ -20,6 +20,11 @@ namespace MsBanking.Core.Account
             modelBuilder.Entity<MsBanking.Common.Entity.Account>().HasQueryFilter(x => x.IsActive);
 
             modelBuilder.Entity<AccountTransactions>().ToTable("AccountTransaction");    
+
+            modelBuilder.Entity<AccountTransactions>()
+                .HasOne(x => x.Account)
+                .WithMany()
+                .HasForeignKey(x=>x.AccountId);
         }
     }
 }

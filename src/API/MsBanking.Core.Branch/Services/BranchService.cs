@@ -34,7 +34,7 @@ namespace MsBanking.Core.Branch.Services
                 {
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(60)
                 };
-                await cache.SetStringAsync(cacheKey, branchSerialized, options);
+                cache.SetString(cacheKey, branchSerialized, options);
             }
 
             return mapped;
@@ -43,7 +43,7 @@ namespace MsBanking.Core.Branch.Services
 
         public async Task<List<BranchResponseDto>> GetBranchesAsync()
         {
-            var fromCache = await cache.GetStringAsync(cacheKey);
+            var fromCache = cache.GetString(cacheKey);
 
             if (!string.IsNullOrEmpty(fromCache))
             {
@@ -56,9 +56,26 @@ namespace MsBanking.Core.Branch.Services
             return response;
         }
 
+        public async Task<BranchResponseDto> GetBranchByCityIdAsync(int cityId)
+        {
+            var fromCache =  cache.GetString(cacheKey);
+            if (!string.IsNullOrEmpty(fromCache))
+            {
+                List<BranchResponseDto> response = JsonSerializer.Deserialize<List<BranchResponseDto>>(fromCache);
+                var branchFromCache = response.FirstOrDefault(x => x.CityId == cityId);
+                return branchFromCache;
+            }
+
+            var result = await SetCacheBranchList();
+
+            var branch = result.FirstOrDefault(x => x.CityId == cityId);
+
+            return branch;
+        }
+
         public async Task<BranchResponseDto> GetBranchByIdAsync(int id)
         {
-            var fromCache = await cache.GetStringAsync(cacheKey);
+            var fromCache =  cache.GetString(cacheKey);
             if (!string.IsNullOrEmpty(fromCache))
             {
                 List<BranchResponseDto> response = JsonSerializer.Deserialize<List<BranchResponseDto>>(fromCache);

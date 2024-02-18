@@ -13,6 +13,7 @@ namespace MsBanking.Common.Dto
         public long CitizenNumber { get; set; }
         public string Email { get; set; }
         public DateTime BirthDate { get; set; }
+        public int CityId { get; set; }
     }
 
     public class CustomerResponseDto:CustomerDto

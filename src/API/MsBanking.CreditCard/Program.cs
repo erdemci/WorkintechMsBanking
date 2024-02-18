@@ -18,6 +18,7 @@ namespace MsBanking.Card
             });
 
             builder.Services.AddScoped<ICardService, CardService>();
+            builder.Services.AddScoped<ICardTransactionService, CardTransactionService>();
 
             // Add services to the container.
 
@@ -27,6 +28,7 @@ namespace MsBanking.Card
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddAutoMapper(typeof(CardDtoProfile));
+            builder.Services.AddAutoMapper(typeof(CardTransactionDtoProfile));
 
             var app = builder.Build();
 

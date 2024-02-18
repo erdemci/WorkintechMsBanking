@@ -11,7 +11,7 @@ namespace MsBanking.Common.Entity
         public int Id { get; set; }
         public string AccountNumber { get; set; }
         public string IbanNumber { get; set; }  
-        public string AccountType { get; set; }
+        public int AccountType { get; set; }
         public decimal Balance { get; set; }
         public string Currency { get; set; }
         public string UserId { get; set; }
@@ -19,3 +19,4 @@ namespace MsBanking.Common.Entity
         public int AccountSuffix { get; set; }
     }
 }
+

@@ -6,7 +6,7 @@ namespace MsBanking.Common.Dto
     {
         public int Code { get; set; }
         public string Name { get; set; }
-        public int CityCode { get; set; }
+        public int CityId { get; set; }//Plaka Kodu
         public int CountryId { get; set; }
 
     }
